@@ -78,8 +78,10 @@ class Dots_and_squares():
         
         # Update the row
         self.rows[coordinates[0], coordinates[1]] = player_id
-        self.update_square((coordinates[0]-1, coordinates[1]), player_id)
-        self.update_square((coordinates[0], coordinates[1]), player_id)
+        uper_square = self.update_square((coordinates[0], coordinates[1]), player_id)
+        lower_square = self.update_square((coordinates[0]-1, coordinates[1]), player_id)
+        if uper_square or lower_square:
+            self.current_player = (self.current_player - 1) % self.n_players
         return True
 
     def update_column(self, coordinates, player_id)->bool:
@@ -106,8 +108,10 @@ class Dots_and_squares():
         
         # Update the column
         self.columns[coordinates[0], coordinates[1]] = player_id
-        self.update_square((coordinates[0], coordinates[1]), player_id)
-        self.update_square((coordinates[0], coordinates[1]-1), player_id)
+        left_square = self.update_square((coordinates[0], coordinates[1]), player_id)
+        right_square = self.update_square((coordinates[0], coordinates[1]-1), player_id)
+        if left_square or right_square:
+            self.current_player = (self.current_player - 1) % self.n_players
         return True
     
     def update_square(self, coordinates, player_id)->bool:
@@ -136,5 +140,5 @@ class Dots_and_squares():
         if self.rows[coordinates[0], coordinates[1]] != -1 and self.rows[coordinates[0]+1, coordinates[1]] != -1 and self.columns[coordinates[0], coordinates[1]] != -1 and self.columns[coordinates[0], coordinates[1]+1] != -1:
             self.squares[coordinates[0], coordinates[1]] = player_id
             self.scores[player_id] += 1
-            self.current_player = (self.current_player - 1) % self.n_players
-        return True
+            return True
+        return False
