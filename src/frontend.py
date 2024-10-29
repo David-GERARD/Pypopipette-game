@@ -22,15 +22,15 @@ class Game_GUI:
         self.grid_size = grid_size
         self.size_of_board = 600
         self.players_colors = generate_rainbow_hex_colors(n_players)
-        symbol_size = (self.size_of_board / 3 - self.size_of_board / 8) / 2
-        symbol_thickness = 50
-        dot_color = '#7BC043'
+        #symbol_size = (self.size_of_board / 3 - self.size_of_board / 8) / 2
+        #symbol_thickness = 50
+        #dot_color = '#7BC043'
         #player1_color = '#0492CF'
         #player1_color_light = '#67B0CF'
         #player2_color = '#EE4035'
         #player2_color_light = '#EE7E77'
         #Green_color = '#7BC043'
-        self.dot_width = 0.25*grid_size[0]/grid_size[0]
+        #self.dot_width = 0.25*grid_size[0]/grid_size[0]
         self.edge_width = 0.075*self.size_of_board/grid_size[0]
         self.distance_between_dots = self.size_of_board / (grid_size[0]+1)
 
@@ -58,6 +58,7 @@ class Game_GUI:
         Returns:
         None
         """
+        # Draw the board
         for i in range(self.grid_size[0]):
             for j in range(self.grid_size[1]):
                 start_x = j * self.distance_between_dots + self.distance_between_dots / 2
@@ -65,7 +66,22 @@ class Game_GUI:
                 end_x = start_x + self.distance_between_dots
                 end_y = start_y + self.distance_between_dots
                 
-                self.canvas.create_rectangle(start_x, start_y, end_x, end_y, outline='black', width=self.edge_width)
+                self.canvas.create_rectangle(start_x, start_y, end_x, end_y, outline='grey', width=self.edge_width/2, dash=(int(self.size_of_board/100), int(self.size_of_board/50)))
+
+        # Draw the edges of the board as black lines
+        # Draw the top and bottom edges
+        self.canvas.create_line(self.distance_between_dots / 2, self.distance_between_dots / 2, self.size_of_board - self.distance_between_dots / 2, self.distance_between_dots / 2, fill='black', width=self.edge_width)
+        self.canvas.create_line(self.distance_between_dots / 2, self.size_of_board - self.distance_between_dots / 2, self.size_of_board - self.distance_between_dots / 2, self.size_of_board - self.distance_between_dots / 2, fill='black', width=self.edge_width)
+
+        # Draw the left and right edges
+        self.canvas.create_line(self.distance_between_dots / 2, self.distance_between_dots / 2, self.distance_between_dots / 2, self.size_of_board - self.distance_between_dots / 2, fill='black', width=self.edge_width)
+        self.canvas.create_line(self.size_of_board - self.distance_between_dots / 2, self.distance_between_dots / 2, self.size_of_board - self.distance_between_dots / 2, self.size_of_board - self.distance_between_dots / 2, fill='black', width=self.edge_width)
+
+        # Display the player scores
+        self.display_players_scores()
+
+        # Display the current player's turn
+        self.display_player_turn()
 
 
     def draw_edge(self, player_id, coordinates, action):
@@ -106,41 +122,94 @@ class Game_GUI:
         for i in range(len(self.game_instance.squares)):
             for j in range(len(self.game_instance.squares[0])):
                 if self.game_instance.squares[i][j] != -1:
-                    start_x = j * self.distance_between_dots + self.distance_between_dots / 2 
-                    start_y = i * self.distance_between_dots + self.distance_between_dots / 2 
-                    end_x = start_x + self.distance_between_dots 
-                    end_y = start_y + self.distance_between_dots 
+                    start_x = j * self.distance_between_dots + self.distance_between_dots / 2 + self.edge_width/2
+                    start_y = i * self.distance_between_dots + self.distance_between_dots / 2 + self.edge_width/2
+                    end_x = start_x + self.distance_between_dots - self.edge_width/2
+                    end_y = start_y + self.distance_between_dots - self.edge_width/2
                     self.canvas.create_rectangle(start_x, start_y, end_x, end_y, fill=self.players_colors[int(self.game_instance.squares[i][j])], outline='')
                 
         #self.canvas.create_rectangle(start_x, start_y, end_x, end_y,  outline = self.players_colors[player_id],fill=self.players_colors[player_id], width=self.edge_width)
 
     def display_gameover(self):
-        #TODO: Implement this method
-        pass
+        """
+        This method displays the game over message on the canvas.
 
-    def refresh_board(self):
-        #TODO: Implement this method
-        pass
+        Returns:
+        None
+        """
+        self.canvas.delete("all")
+        self.canvas.create_text(
+            self.size_of_board / 2,
+            self.size_of_board / 2 - 20,
+            font=('freemono', 30),
+            text='Game Over!',
+            fill='black'
+        )
 
-    def display_turn_text(self):
-        #TODO: Implement this method
-        text = 'Next turn: '
-        if self.game_instance.player1_turn:
-            text += 'Player1'
-            color = player1_color
+        # Determine the winner(s)
+        max_score = max(self.game_instance.scores)
+        winners = [i + 1 for i, score in enumerate(self.game_instance.scores) if score == max_score]
+
+        if len(winners) == 1:
+            winner_text = f'Player {winners[0]} wins!'
         else:
-            text += 'Player2'
-            color = player2_color
+            winner_text = f'Players {", ".join(map(str, winners))} tie!'
 
-        self.canvas.delete(self.turntext_handle)
-        self.turntext_handle = self.canvas.create_text(size_of_board - 5*len(text),
-                                                       size_of_board-self.distance_between_dots/8,
-                                                       font="cmr 15 bold", text=text, fill=color)
-        
+        self.canvas.create_text(
+            self.size_of_board / 2,
+            self.size_of_board / 2 + 20,
+            font=('freemono', 20),
+            text=winner_text,
+            fill= self.players_colors[winners[0]-1]
+        )
 
 
-    def click(self, event):
-        #TODO: Implement this method
+    def display_player_turn(self)->None:
+        """
+        This method displays the player's turn at the top of the canvas.
+        """
+
+        # Clear the previous player's turn
+        self.canvas.delete("player_turn")
+
+        # Display the current player's turn
+        self.canvas.create_text(
+            self.size_of_board / 2,
+            10,
+            text=f'Player {self.game_instance.current_player+1}\'s turn',
+            fill=self.players_colors[self.game_instance.current_player],
+            tags="player_turn"
+        )
+
+    def display_players_scores(self)->None:
+        """
+        This method displays the scores of the players and their colors below the board on the canvas.
+        It refreshes the score displayed on screen instead of writing the text in front of the previous version of the score.
+        """
+        # Clear the previous scores
+        self.canvas.delete("score")
+
+        # Display the updated scores
+        for i in range(self.game_instance.n_players):
+            self.canvas.create_text(
+                self.size_of_board / (2 * self.game_instance.n_players) + i * self.size_of_board / self.game_instance.n_players,
+                self.size_of_board - 10,
+                text=f'Player {i+1}: {int(self.game_instance.scores[i])}',
+                fill=self.players_colors[i],
+                tags="score"
+            )
+
+
+    def click(self, event: tk.Event)->None:
+        """
+        This method is called when the user clicks on the canvas.
+
+        Args:
+        event (tk.Event): The event object.
+
+        Returns:
+        None
+        """
         
         x, y = event.x, event.y
         coordinates, action = self.convert_click_to_action([x, y])
@@ -152,6 +221,12 @@ class Game_GUI:
             else:
                 self.draw_edge(self.game_instance.current_player, coordinates, action)
             self.shade_boxes()
+
+        if self.game_instance.is_game_over():
+            self.display_gameover()
+        else:
+            self.display_players_scores()
+            self.display_player_turn()
 
 
 
@@ -201,7 +276,7 @@ def generate_rainbow_hex_colors(n):
         
 
 if __name__ == '__main__':
-    gui = Game_GUI((6, 6), 2)
+    gui = Game_GUI((10,10), 3)
     gui.mainloop()
     
 
