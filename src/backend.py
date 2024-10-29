@@ -14,12 +14,13 @@ class Dots_and_squares():
         self.n_cols = grid_size[1]
         self.squares = -1*np.ones((self.n_rows, self.n_cols))
         self.columns = -1*np.ones((self.n_rows, self.n_cols+1))
-        self.columns[:,0] = -2 # The leftmost column is already taken
-        self.columns[:,-1] = -2 # The rightmost column is already taken
+        self.columns[:,0] = -2 # -2 means that the column is already taken by a non-player (map feature, in this case the leftmost column)
+        self.columns[:,-1] = -2 # -2 means that the column is already taken by a non-player (map feature, in this case the rightmost column)
         self.rows = -1*np.ones((self.n_rows+1, self.n_cols))
-        self.rows[0,:] = -2 # The top row is already taken
-        self.rows[-1,:] = -2 # The bottom row is already taken
+        self.rows[0,:] = -2 # -2 means that the row is already taken by a non-player (map feature, in this case the top row)
+        self.rows[-1,:] = -2 # -2 means that the row is already taken by a non-player (map feature, in this case the bottom row)
         self.scores = np.zeros(n_players)
+        self.log = []
 
 
 
@@ -44,6 +45,8 @@ class Dots_and_squares():
         Returns:
         bool: True if the player's turn was successful (they clicked on a previously unoccupied edge), False otherwise.
         """
+        self.log.append({"turn":len(self.log),"player_id": player_id, "coordinates": coordinates, "action": action})
+
         if action == "r": # If the action is to update a row
             if self.update_row(coordinates, player_id): # If the row was updated skip to the next player
                 self.current_player = (self.current_player + 1) % self.n_players

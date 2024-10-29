@@ -146,6 +146,7 @@ class Game_GUI:
             fill='black'
         )
 
+
         # Determine the winner(s)
         max_score = max(self.game_instance.scores)
         winners = [i + 1 for i, score in enumerate(self.game_instance.scores) if score == max_score]
@@ -224,6 +225,8 @@ class Game_GUI:
 
         if self.game_instance.is_game_over():
             self.display_gameover()
+            print("Game Over!")
+            print(self.game_instance.log)
         else:
             self.display_players_scores()
             self.display_player_turn()
