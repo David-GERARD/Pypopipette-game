@@ -1,8 +1,8 @@
 from frontend import Game_GUI
 
 # Game parameters
-grid_size = (6, 6)
-n_players = 2
+grid_size = (10, 10)
+n_players = 3
 
 
 
