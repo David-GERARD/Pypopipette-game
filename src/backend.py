@@ -150,3 +150,44 @@ class Dots_and_squares():
             self.scores[player_id] += 1
             return True
         return False
+    
+    def __str__(self):
+        """
+        This method returns a string representation of the game board.
+        
+        Returns:
+        str: The string representation of the game board.
+        """
+
+        board = ""
+        for i in range(self.n_rows):
+            row_line = ""
+            col_line = ""
+            for j in range(self.n_cols):
+                if self.rows[i,j] == -1:
+                    row_line += "* --- "
+                else:
+                    row_line += "*  +  "
+                
+                if self.columns[i,j] == -1:
+                    col_line += "|"
+                else:
+                    col_line += "+"
+                
+                if self.squares[i,j] == -1:
+                    col_line += "     "
+                else:
+                    col_line += f"  {int(self.squares[i,j]+1)}  "
+            row_line += "*"
+            col_line += "+"
+            board += row_line + "\n" + col_line + "\n"
+
+        last_row = "" 
+        for _ in range(self.n_cols):
+            last_row += "*  +  "
+        last_row += "*"
+        board += last_row + "\n"
+        return board
+
+
+            

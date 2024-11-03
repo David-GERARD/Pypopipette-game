@@ -231,6 +231,8 @@ class Game_GUI:
             self.display_players_scores()
             self.display_player_turn()
 
+        print(self.game_instance)
+
 
 
     def convert_click_to_action(self, grid_position)->tuple:
@@ -279,7 +281,7 @@ def generate_rainbow_hex_colors(n):
         
 
 if __name__ == '__main__':
-    gui = Game_GUI((10,10), 3)
+    gui = Game_GUI((4,4), 3)
     gui.mainloop()
     
 
