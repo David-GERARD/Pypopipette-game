@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "pypopipette_game"
+version = "0.0.2"
+description = "My take on the Dots and Squares game (Pipopipette in French)."
+authors = ["David GERARD <david.gerard.23@ucl.ac.uk>"]
+license = "LICENCE"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^2.1.3"
+
+
+[tool.poetry.group.gui.dependencies]
+tk = "^0.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

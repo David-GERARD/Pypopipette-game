@@ -4,7 +4,8 @@ My take on the Dots and Squares game (Pipopipette in French 🇫🇷).
 Disclaimer: this is a work in progress.
 
 ## How to play
-To run the game, run in CLI `python src/main.py`.
+* Recommended: Install [poetry](https://python-poetry.org/docs/basic-usage/#project-setup), run `poetry install`, then run `poetry run python src/pypopipette_game/frontend.py`.
+* Simpler (but could lead to dependenies issues): run `python src/pypopipette_game/frontend.py`.
 
 ## Contributions
 Contributions are welcomed! To do so, fork the repository, make your modifications, and create a pull request towards branch `dev`. 
